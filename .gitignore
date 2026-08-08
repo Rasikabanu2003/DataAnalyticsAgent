@@ -3,4 +3,5 @@ __pycache__/
 *.pyc
 .env
 retail.db
-.streamlit/
+.streamlit/*
+!.streamlit/config.toml

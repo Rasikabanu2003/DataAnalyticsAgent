@@ -26,9 +26,7 @@ init_db()
 st.markdown(
     """
     <style>
-    #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
-    [data-testid="stToolbar"] {visibility: hidden;}
     a[href*="github.com"] {display: none !important;}
     #GithubIcon {display: none !important;}
     .viewerBadge_container__1QSob,
