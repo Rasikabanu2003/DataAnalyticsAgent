@@ -1,3 +1,5 @@
+import re
+
 import pandas as pd
 
 from database import get_schema_markdown, query
@@ -94,7 +96,7 @@ def _validate_sql(sql):
     sql = sql.strip().rstrip(";")
     lowered = " ".join(sql.lower().split())
     for kw in FORBIDDEN_KEYWORDS:
-        if kw in lowered:
+        if re.search(rf"\b{re.escape(kw)}\b", lowered):
             raise ValueError(f"Forbidden keyword '{kw}' in query.")
     if not (lowered.startswith("select") or lowered.startswith("with")):
         raise ValueError("Query must start with SELECT (or WITH).")
