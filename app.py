@@ -23,6 +23,22 @@ EXAMPLE_QUESTIONS = [
 
 st.set_page_config(page_title="Data Analytics Agent", page_icon=":bar_chart:", layout="wide")
 init_db()
+st.markdown(
+    """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    [data-testid="stToolbar"] {visibility: hidden;}
+    a[href*="github.com"] {display: none !important;}
+    #GithubIcon {display: none !important;}
+    .viewerBadge_container__1QSob,
+    .styles_viewerBadge__1yB5_,
+    .viewerBadge_link__1S137,
+    .viewerBadge_text__1JaDK {display: none !important;}
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 
 def make_client():
@@ -83,7 +99,6 @@ with st.sidebar:
 
     st.divider()
     st.subheader("Database")
-    st.caption("Leave blank to use the bundled demo (SQLite retail data).")
     conn_str = st.text_input(
         "Connection string",
         value=st.session_state.get("conn_str", ""),

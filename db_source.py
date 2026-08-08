@@ -18,6 +18,24 @@ def normalize_url(url):
     return url
 
 
+SYSTEM_SCHEMAS = {
+    "information_schema",
+    "auth",
+    "storage",
+    "realtime",
+    "supabase_realtime",
+    "supabase_functions",
+    "graphql",
+    "graphql_public",
+    "vault",
+    "extensions",
+    "pg_catalog",
+    "pg_toast",
+    "supabase_admin",
+    "supabase_migrations",
+}
+
+
 class DbSource:
     def __init__(self, url):
         self.url = normalize_url(url)
@@ -28,11 +46,18 @@ class DbSource:
         with self.engine.connect() as conn:
             insp = inspect(conn)
             lines = []
-            for table in insp.get_table_names():
-                columns = [
-                    f"{c['name']} ({c['type']})" for c in insp.get_columns(table)
-                ]
-                lines.append(f"- **{table}:** " + ", ".join(columns))
+            for schema in insp.get_schema_names():
+                if schema.startswith("pg_") or schema in SYSTEM_SCHEMAS:
+                    continue
+                if schema == "main" and self.dialect != "sqlite":
+                    continue
+                for table in insp.get_table_names(schema=schema):
+                    prefix = f"{schema}." if schema and schema != "main" else ""
+                    columns = ", ".join(
+                        f"{c['name']} ({c['type']})"
+                        for c in insp.get_columns(table, schema=schema)
+                    )
+                    lines.append(f"- **{prefix}{table}:** {columns}")
         return "\n".join(lines)
 
     def query(self, sql):
